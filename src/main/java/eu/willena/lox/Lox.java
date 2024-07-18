@@ -20,9 +20,14 @@ public class Lox {
         }
     }
 
+    static boolean hadError = false;
+
     private static void runFile(String path) throws IOException {
         var bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
+
+        // Set exit code if user code has an error
+        if (hadError) System.exit(65);
     }
 
     private static void runPrompt() throws IOException {
@@ -34,6 +39,10 @@ public class Lox {
             var line = reader.readLine();
             if (line == null) break;
             run(line);
+
+            // When interpreting code, inputs containing errors shouldn't break the REPL, so we
+            // reset the error flag before moving on.
+            hadError = false;
         }
     }
 
@@ -47,4 +56,12 @@ public class Lox {
         }
     }
 
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
+
+    private static void report(int line, String where, String message) {
+        System.err.println("[line " + line + "] Error" + where + ": " + message);
+        hadError = true;
+    }
 }
