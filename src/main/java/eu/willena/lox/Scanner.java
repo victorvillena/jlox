@@ -76,10 +76,29 @@ class Scanner {
                 line += 1;
                 break;
 
+            case '"': string(); break;
+
             default:
                 Lox.error(line, "Unexpected character.");
                 break;
         }
+    }
+
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') line += 1; // multi-line strings are valid / update line counter
+            advance();
+        }
+
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated string.");
+            return;
+        }
+
+        advance(); // Consume the closing '"' after peeking it
+
+        var value = source.substring(start + 1, current - 1); // The string, without quotes
+        addToken(STRING, value);
     }
 
     private char advance() {
