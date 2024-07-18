@@ -79,7 +79,11 @@ class Scanner {
             case '"': string(); break;
 
             default:
-                Lox.error(line, "Unexpected character.");
+                if (isDigit(c)) {
+                    number();
+                } else {
+                    Lox.error(line, "Unexpected character.");
+                }
                 break;
         }
     }
@@ -99,6 +103,18 @@ class Scanner {
 
         var value = source.substring(start + 1, current - 1); // The string, without quotes
         addToken(STRING, value);
+    }
+
+    private void number() {
+        while (isDigit(peek())) advance(); // consume digits, before decimals
+
+        if (peek() == '.' && isDigit(peekNext())) { // dot and more numbers -> decimal part
+            advance(); // consume the dot
+
+            while (isDigit(peek())) advance(); // consume the decimal digits
+        }
+
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private char advance() {
@@ -121,6 +137,15 @@ class Scanner {
     private char peek() {
         if (isAtEnd()) return '\0';
         return source.charAt(current);
+    }
+
+    private char peekNext() {
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current + 1);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
     }
 
     private void addToken(TokenType type) {
