@@ -60,10 +60,20 @@ class Scanner {
 
             case '/':
                 if (match('/')) { // '//' -> comment until the end of the line
+                    // Peek for newlines, to ensure they are consumed explicitly later
                     while (peek() != '\n' && !isAtEnd()) advance();
                 } else {
                     addToken(SLASH);
                 }
+                break;
+
+            case ' ':
+            case '\r':
+            case '\t':
+                break; // ignore whitespace
+
+            case '\n':
+                line += 1;
                 break;
 
             default:
