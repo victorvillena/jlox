@@ -25,7 +25,12 @@ class Parser {
     }
 
     /*
-    program        -> statement* EOF ;
+    program        -> declaration* EOF ;
+
+    declaration    -> varDecl
+                    | statement ;
+
+    varDecl        -> "var" IDENTIFIER ( "=" expression )? ";" ;
 
     statement      →  exprStmt
                     | printStmt ;
@@ -41,7 +46,8 @@ class Parser {
     unary          -> ( "!" | "-" ) unary
                    | primary ;
     primary        ->  NUMBER | STRING | "true" | "false" | "nil"
-                   | "(" expression ")" ;
+                   | "(" expression ")"
+                   | IDENTIFIER ;
      */
 
     private Expr expression() {
