@@ -10,7 +10,7 @@ abstract class Stmt {
     }
 
     static class Expression extends Stmt {
-        Expression(Expr expression) { 
+        Expression(Expr expression) {
             this.expression = expression;
         }
 
@@ -23,7 +23,7 @@ abstract class Stmt {
     }
 
     static class Print extends Stmt {
-        Print(Expr expression) { 
+        Print(Expr expression) {
             this.expression = expression;
         }
 
