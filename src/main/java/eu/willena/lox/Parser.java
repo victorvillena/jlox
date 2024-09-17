@@ -33,10 +33,12 @@ class Parser {
     varDecl        -> "var" IDENTIFIER ( "=" expression )? ";" ;
 
     statement      →  exprStmt
+                    | ifStmt
                     | printStmt
                     | block ;
 
     exprStmt       →  expression ";" ;
+    ifStmt         -> "if" "(" expression ")" statement ( "else" statement )? ;
     printStmt      →  "print" expression ";" ;
     block          -> "{" declaration* "}" ;
 
@@ -70,10 +72,25 @@ class Parser {
     }
 
     private Stmt statement() {
+        if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'if'.");
+        var condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition");
+
+        var thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Stmt printStatement() {
