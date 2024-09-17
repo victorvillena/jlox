@@ -22,6 +22,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        var left = evaluate(expr.left);
+
+        // Short-circuiting - do not evaluate the second operand
+        if (expr.operator.type == TokenType.OR) {
+            if (isTruthy(left)) return left;
+        } else { // AND
+            if (!isTruthy(left)) return left;
+        }
+
+        return evaluate(expr.right);
+    }
+
+    @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }

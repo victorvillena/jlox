@@ -44,7 +44,9 @@ class Parser {
 
     expression     -> assignment ;
     assignment     -> IDENTIFIER "=" assignment
-                    | equality ;
+                    | logic_or ;
+    logic_or       -> logic_and ( "or" logic_and )* ;
+    logic_and       -> equality ( "or" equality )* ;
     equality       -> comparison ( ( "!=" | "==" ) comparison )* ;
     comparison     -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
     term           -> factor ( ( "-" | "+" ) factor )* ;
@@ -129,7 +131,7 @@ class Parser {
     }
 
     private Expr assignment() {
-        var expr = equality();
+        var expr = or();
 
         if (match(EQUAL)) {
             var equals = previous();
@@ -141,6 +143,30 @@ class Parser {
             }
 
             error(equals, "Invalid assignment target");
+        }
+
+        return expr;
+    }
+
+    private Expr or() {
+        var expr = and();
+
+        while (match(OR)) {
+            var operator = previous();
+            var right = and();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr and() {
+        var expr = equality();
+
+        while (match(AND)) {
+            var operator = previous();
+            var right = equality();
+            expr = new Expr.Logical(expr, operator, right);
         }
 
         return expr;
