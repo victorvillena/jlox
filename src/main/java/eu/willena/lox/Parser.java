@@ -35,11 +35,13 @@ class Parser {
     statement      →  exprStmt
                     | ifStmt
                     | printStmt
+                    | whileStmt
                     | block ;
 
     exprStmt       →  expression ";" ;
     ifStmt         -> "if" "(" expression ")" statement ( "else" statement )? ;
     printStmt      →  "print" expression ";" ;
+    whileStmt      -> "while" "(" expression ")" statement ;
     block          -> "{" declaration* "}" ;
 
     expression     -> assignment ;
@@ -76,6 +78,7 @@ class Parser {
     private Stmt statement() {
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
+        if (match(WHILE)) return whileStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
@@ -99,6 +102,15 @@ class Parser {
         Expr value = expression();
         consume(SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
+    }
+
+    private Stmt whileStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'while'.");
+        var condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after condition.");
+        var body = statement();
+
+        return new Stmt.While(condition, body);
     }
 
     private Stmt varDeclaration() {
