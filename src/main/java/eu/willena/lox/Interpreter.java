@@ -1,5 +1,6 @@
 package eu.willena.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -114,7 +115,30 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private void checkNumberOperands(Token operator, Object left, Object right) {
         if (left instanceof Double && right instanceof Double) return;
         throw new RuntimeError(operator, "Operands must be numbers.");
+    }
 
+    @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        var callee = evaluate(expr.callee);
+
+        var arguments = new ArrayList<>();
+        for (var argument : expr.arguments) {
+            arguments.add(evaluate(argument));
+        }
+
+        if (!(callee instanceof LoxCallable function)) {
+            throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+        }
+
+        if (arguments.size() != function.arity()) {
+            var expected = function.arity();
+            var got = arguments.size();
+            throw new RuntimeError(
+                expr.paren,
+                "Expected " + expected + " arguments but got " + got + "."
+            );
+        }
+        return function.call(this, arguments);
     }
 
     private Object evaluate(Expr expr) {
