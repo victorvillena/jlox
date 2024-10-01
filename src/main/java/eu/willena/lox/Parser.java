@@ -71,7 +71,7 @@ class Parser {
     arguments      -> expression ( "," expression )* ;
     primary        ->  NUMBER | STRING | "true" | "false" | "nil"
                    | "(" expression ")"
-                   | IDENTIFIER ;
+                   | IDENTIFIER | "super" "." IDENTIFIER ;
      */
 
     private Expr expression() {
@@ -397,6 +397,13 @@ class Parser {
 
         if (match(NUMBER, STRING)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if (match(SUPER)) {
+            var keyword = previous();
+            consume(DOT, "Expect '.' after 'super'.");
+            var method = consume(IDENTIFIER, "Expect superclass method name.");
+            return new Expr.Super(keyword, method);
         }
 
         if (match(THIS)) return new Expr.This(previous());
