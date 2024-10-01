@@ -31,6 +31,10 @@ class LoxFunction implements LoxCallable {
         try {
             interpreter.executeBlock(declaration.body, environment);
         } catch (Return returnValue) {
+            // Only value-less returns in initializers reach this. Returns with values in initializers are caught by the
+            // resolver.
+            if (isInitializer) return closure.getAt(0, "this");
+
             return returnValue.value;
         }
 
