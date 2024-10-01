@@ -60,6 +60,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitSetExpr(Expr.Set expr) {
+        var object = evaluate(expr.object);
+
+        if (!(object instanceof LoxInstance instance)) {
+            throw new RuntimeError(expr.name, "Only instances have fields");
+        }
+
+        var value = evaluate(expr.value);
+        instance.set(expr.name, value);
+
+        return null;
+    }
+
+    @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }
@@ -172,6 +186,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             );
         }
         return function.call(this, arguments);
+    }
+
+    @Override
+    public Object visitGetExpr(Expr.Get expr) {
+        var object = evaluate(expr.object);
+        if (object instanceof LoxInstance instance) {
+            return instance.get(expr.name);
+        }
+
+        throw new RuntimeError(expr.name, "Only instances have properties.");
     }
 
     private Object evaluate(Expr expr) {
