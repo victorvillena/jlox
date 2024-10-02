@@ -22,7 +22,7 @@ public class Lox {
 
     private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
-    static boolean hadRuntimeError = true;
+    static boolean hadRuntimeError = false;
 
     private static void runFile(String path) throws IOException {
         var bytes = Files.readAllBytes(Paths.get(path));
