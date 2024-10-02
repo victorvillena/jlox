@@ -70,7 +70,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         var value = evaluate(expr.value);
         instance.set(expr.name, value);
 
-        return null;
+        return value;
     }
 
     @Override
