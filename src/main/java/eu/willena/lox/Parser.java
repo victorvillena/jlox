@@ -219,7 +219,7 @@ class Parser {
 
     private Stmt expressionStatement() {
         Expr value = expression();
-        consume(SEMICOLON, "Expect ';' after value.");
+        consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(value);
     }
 
@@ -269,7 +269,7 @@ class Parser {
                 return new Expr.Set(get.object, get.name, value);
             }
 
-            error(equals, "Invalid assignment target");
+            error(equals, "Invalid assignment target.");
         }
 
         return expr;
