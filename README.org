@@ -1,0 +1,11 @@
+* jlox
+
+A Lox implementation in Java.
+
+This implementation was created by following the book [[https://craftinginterpreters.com/][Crafting Interpreters]]. It
+does not deviate from the implementation shown in the book, except I used some
+modern Java features instead of the Java 8 style from the book.
+
+** Usage
+
+Please refer to and use the Makefile.
