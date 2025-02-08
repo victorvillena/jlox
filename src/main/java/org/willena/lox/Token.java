@@ -1,4 +1,4 @@
-package eu.willena.lox;
+package org.willena.lox;
 
 class Token {
     final TokenType type;

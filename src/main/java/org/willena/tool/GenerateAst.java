@@ -1,4 +1,4 @@
-package eu.willena.tool;
+package org.willena.tool;
 
 import java.io.IOException;
 import java.io.PrintWriter;

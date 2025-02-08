@@ -1,4 +1,4 @@
-package eu.willena.lox;
+package org.willena.lox;
 
 import java.util.HashMap;
 import java.util.Map;

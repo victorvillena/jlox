@@ -1,4 +1,4 @@
-package eu.willena.lox;
+package org.willena.lox;
 
 class Return extends RuntimeException {
     final Object value;

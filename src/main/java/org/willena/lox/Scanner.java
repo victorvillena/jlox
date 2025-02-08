@@ -1,11 +1,11 @@
-package eu.willena.lox;
+package org.willena.lox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static eu.willena.lox.TokenType.*;
+import static org.willena.lox.TokenType.*;
 
 class Scanner {
     private final String source;

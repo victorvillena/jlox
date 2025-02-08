@@ -1,10 +1,10 @@
-package eu.willena.lox;
+package org.willena.lox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static eu.willena.lox.TokenType.*;
+import static org.willena.lox.TokenType.*;
 
 class Parser {
     private static class ParseError extends RuntimeException {}
